@@ -3,7 +3,7 @@ from django.conf import settings
 from django.http import JsonResponse
 
 
-openai.api_key = settings.OPEN_API_KEY
+openai.api_key = settings.OPENAI_API_KEY
 
 def generate_response(prompt,mode):
     if mode == "rap":
