@@ -3,7 +3,6 @@ from django.conf import settings
 from django.http import JsonResponse
 
 
-openai.api_key = settings.OPENAI_API_KEY
 
 def generate_response(prompt,mode):
     if mode == "rap":
@@ -12,12 +11,13 @@ def generate_response(prompt,mode):
         prompt = f"Debate this topic {prompt}"
     elif mode == "flirt":
         prompt = f"Generate  a flirty  message and a rejection response: {prompt}"
-        
 
-    response = openai.Completion.create(
-        engine="text-davinci-003",
-        prompt = prompt,
-        max_tokens=100
+    response = openai.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": "Hello!"}
+        ]
     )
 
     return response.choices[0].text.strip()
