@@ -1,12 +1,3 @@
-.env
-venv/
-love/
-love/lib/
-love/lib64/
-love/bin/
-.vscode/
-
-
 # Logs
 logs
 *.log

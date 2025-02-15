@@ -51,11 +51,14 @@ function App() {
   // Axios integration for rap mode
   const handleRapLine = async () => {
     const lastResponse = rapLines[rapLines.length - 1] || '';
+    const rapper = currentRapper === 'LuvBot' ? 'LuvBot' : 'Cupidrilla';
+    const prompt = `${rapper}: ${lastResponse}`;
+  
     try {
       const res = await axios.get('http://127.0.0.1:8000/api/bot/', {
-        params: { mode: 'rap', prompt: lastResponse }
+        params: { mode: 'rap', prompt: prompt }
       });
-      const newLine = res.data.response;
+      const newLine = `${rapper}: ${res.data.response}`;
       setRapLines(prev => [...prev, newLine]);
       setCurrentRapper(prev => (prev === 'LuvBot' ? 'Cupidrilla' : 'LuvBot'));
     } catch (error) {
@@ -97,18 +100,21 @@ function App() {
   // Axios integration for flirt mode
   const handleFlirtLine = async () => {
     const lastResponse = rapLines[rapLines.length - 1] || '';
+    const rapper = currentRapper === 'LuvBot' ? 'LuvBot' : 'Cupidrilla';
+    const prompt = `${rapper}: ${lastResponse}`;
+  
     try {
       const res = await axios.get('http://127.0.0.1:8000/api/bot/', {
-        params: { mode: 'flirt', prompt: lastResponse }
+        params: { mode: 'flirt', prompt: prompt }
       });
-      const newLine = res.data.response;
+      const newLine = `${rapper}: ${res.data.response}`;
       setRapLines(prev => [...prev, newLine]);
       setCurrentRapper(prev => (prev === 'LuvBot' ? 'Cupidrilla' : 'LuvBot'));
     } catch (error) {
       console.error('Error in flirt mode:', error);
     }
   };
-
+  
   return (
     <div className="min-h-screen bg-[#2A0E61] p-4 sm:p-6 md:p-8 relative overflow-hidden crt-flicker">
       <div className="scanline"></div>
