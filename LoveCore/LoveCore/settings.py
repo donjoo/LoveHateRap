@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'Battle',
 ]
 
 MIDDLEWARE = [
@@ -121,3 +122,9 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# settings.py
+OPENAI_API_KEY = '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'
+
+
