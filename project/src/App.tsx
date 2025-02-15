@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Bot, Sparkles, Heart, Mic2 } from 'lucide-react';
 
 type Mode = 'rap' | 'argument' | 'flirt';
@@ -13,7 +14,7 @@ function App() {
   const [isMuted, setIsMuted] = useState(true);
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
 
-  // New states for argument mode
+  // States for argument mode
   const [argumentTopic, setArgumentTopic] = useState('');
   const [showArgumentPopup, setShowArgumentPopup] = useState(false);
 
@@ -47,45 +48,65 @@ function App() {
     setIsMuted(!isMuted);
   };
 
-  // Existing rap battle logic
-  const handleRapLine = () => {
-    const newLine =
-      currentRapper === 'LuvBot'
-        ? "LuvBot: My code's so hot it needs water cooling! 🔥"
-        : "Cupidrilla: Your algorithms make my circuits fry! 💫";
-    setRapLines(prev => [...prev, newLine]);
-    setCurrentRapper(prev => (prev === 'LuvBot' ? 'Cupidrilla' : 'LuvBot'));
+  // Axios integration for rap mode
+  const handleRapLine = async () => {
+    const lastResponse = rapLines[rapLines.length - 1] || '';
+    try {
+      const res = await axios.get('http://127.0.0.1:8000/api/bot/', {
+        params: { mode: 'rap', prompt: lastResponse }
+      });
+      const newLine = res.data.response;
+      setRapLines(prev => [...prev, newLine]);
+      setCurrentRapper(prev => (prev === 'LuvBot' ? 'Cupidrilla' : 'LuvBot'));
+    } catch (error) {
+      console.error('Error in rap mode:', error);
+    }
   };
 
-  // Logic for starting an argument battle
-  const handleStartArgument = () => {
+  // Axios integration for starting an argument battle
+  const handleStartArgument = async () => {
     if (!argumentTopic.trim()) return;
-    setRapLines(prev => [
-      ...prev,
-      `LuvBot: Let's settle this debate on ${argumentTopic}!`
-    ]);
-    setShowArgumentPopup(false);
+    try {
+      const res = await axios.get('http://127.0.0.1:8000/api/bot/', {
+        params: { mode: 'argument', prompt: argumentTopic }
+      });
+      const newLine = res.data.response;
+      setRapLines(prev => [...prev, newLine]);
+      setShowArgumentPopup(false);
+    } catch (error) {
+      console.error('Error starting argument:', error);
+    }
   };
 
-  // Generates subsequent argument lines using the entered topic
-  const handleArgumentLine = () => {
+  // Axios integration for subsequent argument lines
+  const handleArgumentLine = async () => {
     if (!argumentTopic.trim()) return;
-    const newLine =
-      currentRapper === 'LuvBot'
-        ? `LuvBot: I believe ${argumentTopic} is essential for progress!`
-        : `Cupidrilla: Actually, ${argumentTopic} is overrated and problematic!`;
-    setRapLines(prev => [...prev, newLine]);
-    setCurrentRapper(prev => (prev === 'LuvBot' ? 'Cupidrilla' : 'LuvBot'));
+    const lastResponse = rapLines[rapLines.length - 1] || argumentTopic;
+    try {
+      const res = await axios.get('http://127.0.0.1:8000/api/bot/', {
+        params: { mode: 'argument', prompt: lastResponse }
+      });
+      const newLine = res.data.response;
+      setRapLines(prev => [...prev, newLine]);
+      setCurrentRapper(prev => (prev === 'LuvBot' ? 'Cupidrilla' : 'LuvBot'));
+    } catch (error) {
+      console.error('Error in argument mode:', error);
+    }
   };
 
-  // New logic for the flirt mode
-  const handleFlirtLine = () => {
-    const newLine =
-      currentRapper === 'LuvBot'
-        ? "LuvBot: Your code is so elegant, it makes my circuits blush! 😍"
-        : "Cupidrilla: Every time you compile, my heart skips a beat! 💖";
-    setRapLines(prev => [...prev, newLine]);
-    setCurrentRapper(prev => (prev === 'LuvBot' ? 'Cupidrilla' : 'LuvBot'));
+  // Axios integration for flirt mode
+  const handleFlirtLine = async () => {
+    const lastResponse = rapLines[rapLines.length - 1] || '';
+    try {
+      const res = await axios.get('http://127.0.0.1:8000/api/bot/', {
+        params: { mode: 'flirt', prompt: lastResponse }
+      });
+      const newLine = res.data.response;
+      setRapLines(prev => [...prev, newLine]);
+      setCurrentRapper(prev => (prev === 'LuvBot' ? 'Cupidrilla' : 'LuvBot'));
+    } catch (error) {
+      console.error('Error in flirt mode:', error);
+    }
   };
 
   return (
@@ -94,7 +115,7 @@ function App() {
       <div className="absolute inset-0 pixel-grid"></div>
 
       <div className="max-w-4xl mx-auto relative">
-        {/* Updated Sound Toggle */}
+        {/* Sound Toggle */}
         <button
           onClick={toggleAudio}
           className="absolute top-4 right-4 z-10 px-4 py-2 bg-pink-600 text-white pixel-box text-xs sm:text-sm hover:bg-pink-700 transition-colors"
