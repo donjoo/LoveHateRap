@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -125,6 +130,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # settings.py
-OPENAI_API_KEY = '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'
+OPENAI_API_KEY = os.getenv("OPEN_API_KEY")
 
 
